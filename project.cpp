@@ -452,9 +452,28 @@ void PrintMenu(){
 };
 struct order{
     vector<Item> t;
-void finaliseOrder(vector<Item> p){
-    vector<Item> t(p);
+    order(vector<Item> p){
+        vector<Item> t(p);
     }
+};
+class SalesReport{
+vector<order> k;
+public:
+SalesReport(vector<order> p){
+    vector<order> k(p);
+}
+void totalItemsSold(){
+    int amountofItemSold=0;
+    for (int i = 0; i <k.size(); i++)
+    {
+        for (int j = 0; j < k[i].t.size(); i++)
+        {
+            amountofItemSold++;
+        }
+        
+    }
+    
+}
 };
 int main(){
     cout<<"zero error build";
