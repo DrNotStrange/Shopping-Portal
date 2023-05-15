@@ -2,7 +2,125 @@
 #include<string>
 #include<vector>
 using namespace std;
+class Item{
+   int SKU;
+   string name;
+  double sale_price,purchase_price;
+  int stock_quantity;
+  int cart_quantity;
+  int requestQuantity;
+  public:
+  Item(){
+
+  }
+  Item(string name1,int x,double sale,double p,int s){
+    name=name1;
+SKU=x;
+sale_price=sale;
+purchase_price=p;
+stock_quantity=s;
+  }
+  void setrequestQuantity(int x){
+    requestQuantity=x;
+  }
+  int getrequestquantity(){
+    return requestQuantity;
+  }
+  void setCartQuantity(int x){
+    cart_quantity=x;
+  }
+  int getCartQuantity(){
+    return cart_quantity;
+  }
+  void displayItemForCustomer(){
+    cout<<"----------------------------------"<<endl;
+    cout<<"NAME : "<<name<<endl;
+    cout<<"SKU : "<<SKU<<endl;
+    cout<<"sale price : "<<sale_price<<endl;
+    cout<<"In stock : "<<stock_quantity<<endl;
+    cout<<"----------------------------------"<<endl;
+     
+    
+  }
+   void displayItemForAdmin(){
+    cout<<"----------------------------------"<<endl;
+    cout<<"NAME : "<<name<<endl;
+    cout<<"SKU : "<<SKU<<endl;
+    cout<<"sale price : "<<sale_price<<endl;
+    cout<<"purchase price"<<purchase_price;
+    cout<<"In stock : "<<stock_quantity<<endl;
+    cout<<"requested quantity from vendor : "<<requestQuantity<<endl;
+    cout<<"----------------------------------"<<endl;
+  }
+  void setSKU(int x){
+    SKU=x;
+  }
+  int getSKU(){
+    return SKU;
+  }
+  void setSalePrice(double x){
+    sale_price=x;
+  }
+  double getSalePrice(){
+    return sale_price;
+  }
+  void setPurchasePrice(double x){
+    purchase_price=x;
+  }
+  double getPurchasePrice(){
+    return purchase_price;
+  }
+  void setStockQuantity(int x){
+    stock_quantity=x;
+  }
+  int getStockQuantity(){
+    return stock_quantity;
+  }
+  
+  
+  void ModifyAnyItem(string name1,int x,double sale,double p,int s){
+    name=name1;
+SKU=x;
+sale_price=sale;
+purchase_price=p;
+stock_quantity=s;
+  }
+  
+};
+class department{
+    string department_name;
+    
+    public:
+    vector<Item> t;
+    department(){
+
+    }
+    department(string p){
+department_name=p;
+    }
+    string getdepartmentName(){
+        return department_name;
+    }
+    void displayCategory(){
+        cout<<department_name<<endl;
+    }
+    void AddItem(Item p){
+    
+        t.push_back(p);
+}
+void RemoveItem(Item p){
+    for (int i = 0; i < t.size(); i++)
+    {
+         if(t[i].getSKU()==p.getSKU()){
+        t.erase(t.begin()+i);
+         }
+    }
+    
+}
+
+};
 class roles{
+
 string name;
 int user_id;
 string password;
@@ -38,7 +156,14 @@ class customer:public roles{
 string email;
 string address;
 int phone_no;
+int frequency;
 public:
+void setfrequenct(int x){
+    frequency=x;
+}
+int getfrequency(){
+    return frequency;
+}
 // Getter and Setter for 'address'
     string getAddress() const {
         return address;
@@ -64,7 +189,6 @@ public:
         phone_no = newPhoneNo;
     }
 };
-class department;
 class Inventory{
     public:
 vector<department> dept;
@@ -200,7 +324,7 @@ class admin:public roles{
 };
 class vendor{
 public:
-void seeInventory(Inventory p){
+void seeInventory( Inventory p){
     for (int i = 0; i <p.dept.size(); i++)
     {
         for (int j = 0;  j<p.dept[i].t.size(); j++)
@@ -239,123 +363,9 @@ void updateInventory(Inventory p){
     }
 }
 };
-class Item{
-   int SKU;
-   string name;
-  double sale_price,purchase_price;
-  int stock_quantity;
-  int cart_quantity;
-  int requestQuantity;
-  public:
-  Item(){
 
-  }
-  Item(string name1,int x,double sale,double p,int s){
-    name=name1;
-SKU=x;
-sale_price=sale;
-purchase_price=p;
-stock_quantity=s;
-  }
-  void setrequestQuantity(int x){
-    requestQuantity=x;
-  }
-  int getrequestquantity(){
-    return requestQuantity;
-  }
-  void setCartQuantity(int x){
-    cart_quantity=x;
-  }
-  int getCartQuantity(){
-    return cart_quantity;
-  }
-  void displayItemForCustomer(){
-    cout<<"----------------------------------"<<endl;
-    cout<<"NAME : "<<name<<endl;
-    cout<<"SKU : "<<SKU<<endl;
-    cout<<"sale price : "<<sale_price<<endl;
-    cout<<"In stock : "<<stock_quantity<<endl;
-    cout<<"----------------------------------"<<endl;
-     
-    
-  }
-   void displayItemForAdmin(){
-    cout<<"----------------------------------"<<endl;
-    cout<<"NAME : "<<name<<endl;
-    cout<<"SKU : "<<SKU<<endl;
-    cout<<"sale price : "<<sale_price<<endl;
-    cout<<"purchase price"<<purchase_price;
-    cout<<"In stock : "<<stock_quantity<<endl;
-    cout<<"requested quantity from vendor : "<<requestQuantity<<endl;
-    cout<<"----------------------------------"<<endl;
-  }
-  void setSKU(int x){
-    SKU=x;
-  }
-  int getSKU(){
-    return SKU;
-  }
-  void setSalePrice(double x){
-    sale_price=x;
-  }
-  double getSalePrice(){
-    return sale_price;
-  }
-  void setPurchasePrice(double x){
-    purchase_price=x;
-  }
-  double getPurchasePrice(){
-    return purchase_price;
-  }
-  void setStockQuantity(int x){
-    stock_quantity=x;
-  }
-  int getStockQuantity(){
-    return stock_quantity;
-  }
-  
-  
-  void ModifyAnyItem(string name1,int x,double sale,double p,int s){
-    name=name1;
-SKU=x;
-sale_price=sale;
-purchase_price=p;
-stock_quantity=s;
-  }
-  
-};
-class department{
-    string department_name;
-    
-    public:
-    vector<Item> t;
-    department(){
 
-    }
-    department(string p){
-department_name=p;
-    }
-    string getdepartmentName(){
-        return department_name;
-    }
-    void displayCategory(){
-        cout<<department_name<<endl;
-    }
-    void AddItem(Item p){
-    
-        t.push_back(p);
-}
-void RemoveItem(Item p){
-    for (int i = 0; i < t.size(); i++)
-    {
-         if(t[i].getSKU()==p.getSKU()){
-        t.erase(t.begin()+i);
-         }
-    }
-    
-}
 
-};
 class ShoppingCart{
 vector<Item> t;
 int sizeOfCart;
@@ -367,7 +377,7 @@ ShoppingCart(){
 void AddItem(Item p,int quantity){
     
         t.push_back(p);
-    t[t.size()].setCartQuantity(quantity);
+    t[t.size()-1].setCartQuantity(quantity);
     sizeOfCart++;
 }
 void RemoveItem(Item p){
@@ -380,7 +390,7 @@ void RemoveItem(Item p){
     }
 }
 int GetNumItemsinCart(){
-    return sizeOfCart;
+    return t.size();
 }
 double getCostOfCart(){
     double cost=0.0;
@@ -388,7 +398,7 @@ double getCostOfCart(){
     {
         cost=cost+(t[i].getSalePrice()*(t[i].getCartQuantity()));
     }
-    
+    return cost;
 }
 void PrintTotalItems(){
     if(t.size()==0){
@@ -440,6 +450,12 @@ void PrintMenu(){
     }
 }
 };
-class file{
-  
+struct order{
+    vector<Item> t;
+void finaliseOrder(vector<Item> p){
+    vector<Item> t(p);
+    }
 };
+int main(){
+    cout<<"zero error build";
+}
