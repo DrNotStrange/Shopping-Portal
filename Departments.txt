@@ -1,0 +1,6 @@
+departments
+Fish & Meat
+Fresh Produced
+Bakery
+House Hold
+Pharmacy

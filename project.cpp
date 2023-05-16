@@ -115,6 +115,9 @@ department_name=p;
     string getdepartmentName(){
         return department_name;
     }
+    string getName(){
+        return department_name;
+    }
     void displayCategory(){
         cout<<department_name<<endl;
     }
@@ -336,7 +339,7 @@ class admin:public roles{
      
  }
 };
-class vendor{
+class vendor:public roles{
 public:
 void seeInventory( Inventory p){
     for (int i = 0; i <p.dept.size(); i++)
@@ -560,6 +563,3 @@ double cost=0.0;
 
 }
 };
-int main(){
-    cout<<"zero error build";
-}
