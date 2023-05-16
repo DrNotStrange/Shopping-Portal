@@ -9,6 +9,8 @@ class Item{
   int stock_quantity;
   int cart_quantity;
   int requestQuantity;
+  int soldQuantity;
+  int itemspurchased;
   public:
   Item(){
 
@@ -32,6 +34,12 @@ stock_quantity=s;
   int getCartQuantity(){
     return cart_quantity;
   }
+  void setItemsPurchasedFromVendor(int x){
+    itemspurchased=x;
+  }
+  int getItemsPurchasedFromVendor(){
+    return itemspurchased;
+  }
   void displayItemForCustomer(){
     cout<<"----------------------------------"<<endl;
     cout<<"NAME : "<<name<<endl;
@@ -51,6 +59,12 @@ stock_quantity=s;
     cout<<"In stock : "<<stock_quantity<<endl;
     cout<<"requested quantity from vendor : "<<requestQuantity<<endl;
     cout<<"----------------------------------"<<endl;
+  }
+  void setSoldquantity(int x){
+    soldQuantity=x;
+  }
+  int getSoldquantity(){
+    return soldQuantity;
   }
   void setSKU(int x){
     SKU=x;
@@ -363,9 +377,6 @@ void updateInventory(Inventory p){
     }
 }
 };
-
-
-
 class ShoppingCart{
 vector<Item> t;
 int sizeOfCart;
@@ -456,13 +467,14 @@ struct order{
         vector<Item> t(p);
     }
 };
-class SalesReport{
+class Report{
 vector<order> k;
 public:
-SalesReport(vector<order> p){
+Report(vector<order> p){
     vector<order> k(p);
 }
-void totalItemsSold(){
+void GeneratesalesReport(){
+    //total amounts of items sold;
     int amountofItemSold=0;
     for (int i = 0; i <k.size(); i++)
     {
@@ -472,7 +484,80 @@ void totalItemsSold(){
         }
         
     }
+    cout<<" quantity of total items sold is : "<<amountofItemSold<<endl;
+    //total quantity of each item sold
+    for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        k[i].t[j].displayItemForAdmin();
+        cout<<k[i].t[j].getSoldquantity()<<endl;
+        }
+    }
+// total sale amount of each item
+for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        k[i].t[j].displayItemForAdmin();
+        }
+    }
+// total revenue collected
+double revenue=0.0;
+for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        revenue=(k[i].t[j].getSalePrice()*k[i].t[j].getSoldquantity())+revenue;
+        }
+    }
+    cout<<"total revenue generated is :  "<<revenue<<endl;
+    // total profit of all sales
+    double profit=0.0;
+    for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        profit=((k[i].t[j].getSalePrice()-k[i].t[j].getPurchasePrice())*k[i].t[j].getSoldquantity())+profit;
+        }
+    }
+    cout<<"total profit collected is : "<<profit<<endl;
+// total cost of all items sold
+double cost=0.0;
+    for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        cost=(k[i].t[j].getPurchasePrice()*k[i].t[j].getSoldquantity())+cost;
+        }
+    }
+    cout<<"total cost of all items sold is : "<<cost<<endl;
+}
+void purchaseReport(Inventory p){
+    // total items purchased 
+    int itemsPurchased=0;
+    for (int i = 0; i <p.dept.size(); i++)
+    {
+        for (int j = 0; j <p.dept[i].t.size(); j++)
+        {
+           itemsPurchased=itemsPurchased+p.dept[i].t[j].getItemsPurchasedFromVendor();
+            
+        }
+        
+    }
     
+//cost of each item 
+for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        k[i].t[j].displayItemForAdmin();
+        }
+    }
+//total cost of all items 
+double cost=0.0;
+ for (int i = 0; i <k.size(); i++)
+    {
+        for(int j=0;j<k[i].t.size();j++){
+        cost=(k[i].t[j].getPurchasePrice()*k[i].t[j].getItemsPurchasedFromVendor())+cost;
+        }
+    }
+    cout<<"total cost of all items sold is : "<<cost<<endl;
+
 }
 };
 int main(){
