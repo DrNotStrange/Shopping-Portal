@@ -3,24 +3,28 @@
 #include<vector>
 using namespace std;
 class Item{
-   int SKU;
-   string name;
-  double sale_price,purchase_price;
-  int stock_quantity;
-  int cart_quantity;
-  int requestQuantity;
-  int soldQuantity;
-  int itemspurchased;
-  public:
+    int SKU;
+    string name;
+    double sale_price,purchase_price;
+    int stock_quantity;
+    int cart_quantity;
+    int requestQuantity;
+    int soldQuantity;
+    int itemspurchased;
+    public:
   Item(){
 
   }
-  Item(string name1,int x,double sale,double p,int s){
+  Item(string name1,int x,double sale,double p,int s,int cart,int request,int sold,int purchased){
     name=name1;
-SKU=x;
-sale_price=sale;
-purchase_price=p;
-stock_quantity=s;
+    SKU=x;
+    sale_price=sale;
+    purchase_price=p;
+    stock_quantity=s;
+    cart_quantity=cart;
+    requestQuantity=request;
+    soldQuantity=sold;
+    itemspurchased=purchased; 
   }
   void setrequestQuantity(int x){
     requestQuantity=x;
@@ -55,7 +59,7 @@ stock_quantity=s;
     cout<<"NAME : "<<name<<endl;
     cout<<"SKU : "<<SKU<<endl;
     cout<<"sale price : "<<sale_price<<endl;
-    cout<<"purchase price"<<purchase_price;
+    cout<<"purchase price : "<<purchase_price<<endl;
     cout<<"In stock : "<<stock_quantity<<endl;
     cout<<"requested quantity from vendor : "<<requestQuantity<<endl;
     cout<<"----------------------------------"<<endl;
@@ -172,38 +176,57 @@ public:
 class customer:public roles{
 string email;
 string address;
-int phone_no;
+double phone_no;
 int frequency;
 public:
-void setfrequenct(int x){
+customer(string newname,int newuserid,string newpassword,string newemail,string newaddress,double newphone_no,int newfrequency){
+    email=newemail;
+    address=newaddress;
+    phone_no=newphone_no;
+    frequency=newfrequency;
+    setName(newname);
+    setUserId(newuserid);
+    setPassword(newpassword);
+}
+void setfrequency(int x){
     frequency=x;
 }
 int getfrequency(){
     return frequency;
 }
 // Getter and Setter for 'address'
-    string getAddress() const {
+    string getAddress()  {
         return address;
     }
 
-    void setAddress(const string& newAddress) {
+    void setAddress( string newAddress) {
         address = newAddress;
     }
      // Getter and Setter for 'email'
-    string getEmail() const {
+    string getEmail()  {
         return email;
     }
 
-    void setEmail(const string& newEmail) {
+    void setEmail( string newEmail) {
         email = newEmail;
     }
     // Getter and Setter for 'phone_no'
-    int getPhoneNo() const {
+    int getPhoneNo()  {
         return phone_no;
     }
 
     void setPhoneNo(int newPhoneNo) {
         phone_no = newPhoneNo;
+    }
+    void displayCustomerInfo(){
+        cout<<"-----------------------------------------"<<endl;
+        cout<<"name : "<<getName()<<endl;
+        cout<<"user ID : "<<getUserId()<<endl;
+        cout<<"email : "<<email<<endl;
+        cout<<"address : "<<address<<endl;
+        cout<<"phone number : "<<phone_no<<endl;
+        cout<<"times shopped before : "<<frequency<<endl;
+        cout<<"-----------------------------------------"<<endl;
     }
 };
 class Inventory{
@@ -212,6 +235,11 @@ vector<department> dept;
 };
 class admin:public roles{
  public:
+ admin(string name1,int id,string paswword1){
+    setName(name1);
+    setUserId(id);
+    setPassword(paswword1);
+ }
  void seeInventory(Inventory p){
     int choice=0;
     for (int i = 0; i <p.dept.size(); i++)
@@ -227,13 +255,23 @@ class admin:public roles{
     p.dept[choice].t[i].displayItemForAdmin();
     } 
  }
+ void displayAdminInfo(){
+    cout<<"-------------------------------"<<endl;
+    cout<<"name : "<<getName()<<endl;
+    cout<<"user id : "<<getUserId()<<endl;
+    cout<<"-------------------------------"<<endl;
+ }
  void ADDItem(Inventory p){
     string deptartmentName;
     string name;
-    int x;
-    double sale;
-    double purchase;
-    int stock;
+    int x=0;
+    double sale=0.0;
+    double purchase=0.0;
+    int stock=0;
+    int cart=0;
+    int requested=0;
+    int soldquantity=0;
+    int itempurchased=0;
     cout<<"enter department name into which you would like to add ITEM : ";
     cin>>deptartmentName;
     cout<<"enter name of ITEM : ";
@@ -246,12 +284,18 @@ class admin:public roles{
     cin>>purchase;
     cout<<"enter quantity in stock of ITEM : ";
     cin>>stock;
+    cout<<"enter requested quantity of item from vendor";
+    cin>>requested;
+    cout<<"enter sold quantity of item ";
+    cin>>soldquantity;
+    cout<<"enter total quantity of  item purchased from vendor ";
+    cin>>itempurchased;
     for (int i = 0; i < p.dept.size(); i++)
     {
         
         if(deptartmentName==p.dept[i].getdepartmentName()){
             Item temp;
-            temp=Item(name,x,sale,purchase,stock);
+            temp=Item(name,x,sale,purchase,stock,0,requested,soldquantity,itempurchased);
             p.dept[i].AddItem(temp);
             cout<<"ITEM ADDED SUCCESSFULLY !!"<<endl;
             break;
@@ -341,6 +385,11 @@ class admin:public roles{
 };
 class vendor:public roles{
 public:
+vendor(string name1,int id,string paswword1){
+    setName(name1);
+    setUserId(id);
+    setPassword(paswword1);
+ }
 void seeInventory( Inventory p){
     for (int i = 0; i <p.dept.size(); i++)
     {
@@ -355,6 +404,12 @@ void seeInventory( Inventory p){
         
     }
 }
+void displayvendorInfo(){
+    cout<<"-------------------------------"<<endl;
+    cout<<"name : "<<getName()<<endl;
+    cout<<"user id : "<<getUserId()<<endl;
+    cout<<"-------------------------------"<<endl;
+ }
 void updateInventory(Inventory p){
      int sku=0,quantity=0;
      cout<<"enter the sku of item you want to update stock of : ";
@@ -562,4 +617,20 @@ double cost=0.0;
     cout<<"total cost of all items sold is : "<<cost<<endl;
 
 }
+};
+class UserDatabase{
+public:
+vector<customer> s;
+vector<admin> d;
+vector<vendor> k;
+void addcustomer(customer p){
+    s.push_back(p);
+}
+void addAdmin(admin p){
+    d.push_back(p);
+}
+void addVendor(vendor p){
+    k.push_back(p);
+}
+
 };
