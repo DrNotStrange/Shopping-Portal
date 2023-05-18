@@ -17,10 +17,6 @@ int main(){
         department dept(line);
         mainInventory.dept.push_back(dept);
     }
-     for (int i = 0; i <mainInventory.dept.size(); i++)
-    {
-       cout<<mainInventory.dept[i].getName()<<endl;
-    }
     departments.close();
     fstream items;
     string line1;
@@ -57,14 +53,6 @@ for (int i = 0; i < mainInventory.dept.size(); i++)
 }
     }
     items.close();
-    for (int i = 0; i <mainInventory.dept.size(); i++)
-    {
-        for (int j = 0; j < mainInventory.dept[i].t.size(); j++)
-        {
-             mainInventory.dept[i].t[j].displayItemForAdmin();
-             cout<<endl;
-        }
-    }
     UserDatabase users;
     fstream customersFile;
     string line2;
@@ -86,11 +74,6 @@ for (int i = 0; i < mainInventory.dept.size(); i++)
         users.addcustomer(temp);
     }
     customersFile.close();
-
-    for (int i = 0; i <users.s.size(); i++)
-    {
-        users.s[i].displayCustomerInfo();
-    }
     fstream AdminFile;
     string line3;
     AdminFile.open("admin.csv",ios::in);
@@ -106,10 +89,6 @@ for (int i = 0; i < mainInventory.dept.size(); i++)
             users.addAdmin(temp);
     }
     AdminFile.close();
-    for (int i = 0; i <users.d.size(); i++)
-    {
-        users.d[i].displayAdminInfo();
-    }
     fstream VendorFile;
     string line4;
     VendorFile.open("vendor.csv",ios::in);
@@ -125,9 +104,111 @@ for (int i = 0; i < mainInventory.dept.size(); i++)
             users.addVendor(temp);
     }
     VendorFile.close();
-     for (int i = 0; i <users.k.size(); i++)
+    ShoppingCart cart;
+    order order1;
+    int LoginTYPEchoice=0;
+    cout<<"---Welcome to Jiggly Puff Online Shopping Portal---"<<endl;
+    cout<<"---What is your Login type?---"<<endl;
+    cout<<"---Please Select your roles---"<<endl; 
+    cout<<endl;
+    cout<<"choice 1 : Customer"<<endl;
+    cout<<"choice 2 : Admin"<<endl;
+    cout<<"choice 3 : Vendor"<<endl;
+    cout<<"ENTER CHOICE : ";
+    cin>>LoginTYPEchoice;
+    if (LoginTYPEchoice==1)
     {
-        users.k[i].displayvendorInfo();
+        bool registeredusercheck=0;
+        cout<<"---Welcome to Customer Mode---"<<endl;
+        cout<<"Are you a registered person of this application? "<<endl;
+        cout<<"enter '1' for YES or '0' for NO : ";
+        cin>>registeredusercheck;
+        if (registeredusercheck==1)
+        {
+            string password;
+            int user_id;
+            cout<<"Please enter your user id : ";
+            cin>>user_id;
+            cout<<"Please Enter your Password : ";
+            cin>>password;
+            int count=0;
+            int inVariable=0;
+            for (int i = 0; i <users.s.size(); i++)
+            {
+                if (users.s[i].getUserId()==user_id && users.s[i].getPassword()==password ){
+               count++;
+               inVariable=i;
+                }
+            }
+            if(count==1){
+
+                cart.PrintMenuForExistingCustomer(users.s[inVariable].getName());
+                int choice1=0;
+                cin>>choice1;
+                if (choice1==1)
+                {
+                    if (cart.GetNumItemsinCart()==0)
+                    {
+                        cout<<"please first add items in the cart to place order !!!"<<endl;
+                    }
+                    else{
+                        order1=order(cart.t);
+                    }
+                    
+                }
+                else if(choice1==2){
+                    for (int i = 0; i <mainInventory.dept.size(); i++)
+                    {
+                        cout<<i+1<<" "<<mainInventory.dept[i].getName();
+                    }
+                    cout<<"choose : ";
+                    int choosedDepartment=0;
+                    cin>>choosedDepartment;
+                    for(int i=0;i<mainInventory.dept[choosedDepartment].t.size();i++){
+                    cout<<i+1<<" ";
+
+                    mainInventory.dept[choosedDepartment].t[i].displayItemForCustomer();
+                    }                       
+                    cout<<"choose : ";
+                    int choosedItem=0;
+                    cin>>choosedItem;
+                    cout<<"enter desired quantity : ";
+                    int choosedQuantity=0;
+                    cin>>choosedQuantity;
+                    cart.AddItem(mainInventory.dept[choosedDepartment].t[choosedItem],choosedQuantity);
+                    cout<<"Item added to cart successfully !"<<endl;
+                    
+                     
+                }
+                 else if(choice1==3){
+                    
+                }
+                 else if(choice1==4){
+                    
+                }
+                 else if(choice1==5){
+                    
+                }
+                 else if(choice1==6){
+                    
+                }
+                 else if(choice1==0){
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    else if(LoginTYPEchoice==2){
+
+    }
+    else if (LoginTYPEchoice==3){
+
+    }
+    else{
+        cout<<"wrong choice! please enter again"<<endl;
     }
     
 }

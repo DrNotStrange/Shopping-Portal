@@ -435,10 +435,9 @@ void updateInventory(Inventory p){
     }
 }
 };
-class ShoppingCart{
+struct ShoppingCart{
 vector<Item> t;
 int sizeOfCart;
-public:
 ShoppingCart(){
     sizeOfCart=0;
 }
@@ -485,42 +484,44 @@ void PrintItemDescription(){
     }
     
 }
-void PrintMenu(){
-    int choice=0;
-    cout<<"choice 1 : Place order"<<endl;
-    cout<<"choice 2 : Add item to cart"<<endl;
-    cout<<"choice 3 : display cart items "<<endl;
-    cout<<"choice 4 : search Item in cart "<<endl;
-    cout<<"choice 5 : remove Item "<<endl;
-    cout<<"choice 6 : total price of cart"<<endl;
-    cout<<"choice 7 : exit the program"<<endl;
-    cout<<"enter choice : ";
-    cin>>choice;
-    if(choice==1){
-     
-    }
-    else if(choice==2){
-
-    }
-    else if(choice==3){
-
-    }
-    else if(choice==4){
-        
-    }
-    else if(choice==5){
-        
-    }
-    else if(choice==6){
-        
-    }
-    else{
-
-    }
+void PrintMenuForExistingCustomer(string nameofexistingcustomer){
+                cout<<"                        Customer View               "<<endl;
+                cout<<"----------------------------------------------------"<<endl;
+                cout<<"----------------------------------------------------"<<endl;
+                cout<<"Welcome Back Mr/Mrs. "<<nameofexistingcustomer<<endl;
+                cout<<endl;
+                cout<<"what would like to do from the choices below? "<<endl;
+                cout<<"if you want to place order enter 1 "<<endl;
+                cout<<"if you want to add item to cart press 2"<<endl;
+                cout<<"if you want to display cart press 3"<<endl;
+                cout<<"if you want to search item by sku press 4"<<endl;
+                cout<<"if you want to remove item from cart press 5"<<endl;
+                cout<<"if you want to see total price of your cart press 6"<<endl;
+                cout<<"if you want to exit press 0"<<endl;
+                cout<<"enter choice : ";
+}
+void PrintMenuForNon_ExistingCustomer(){
+                cout<<"                        Customer View               "<<endl;
+                cout<<"----------------------------------------------------"<<endl;
+                cout<<"----------------------------------------------------"<<endl;
+                cout<<"Welcome Dear Customer"<<endl;
+                cout<<endl;
+                cout<<"what would like to do from the choices below? "<<endl;
+                cout<<"if you want to place order enter 1 "<<endl;
+                cout<<"if you want to add item to cart press 2"<<endl;
+                cout<<"if you want to display cart press 3"<<endl;
+                cout<<"if you want to search item by sku press 4"<<endl;
+                cout<<"if you want to remove item from cart press 5"<<endl;
+                cout<<"if you want to see total price of your cart press 6"<<endl;
+                cout<<"if you want to exit press 0"<<endl;
+                cout<<"enter choice : ";
 }
 };
 struct order{
     vector<Item> t;
+    order(){
+        
+    }
     order(vector<Item> p){
         vector<Item> t(p);
     }
