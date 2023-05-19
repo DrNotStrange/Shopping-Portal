@@ -253,9 +253,7 @@ int main(){
                                 }
                                 
                             }
-                            else{
-                                cout<<"Item not found :( "<<endl;
-                            }
+                            
                             
                         }
                         
@@ -318,7 +316,13 @@ int main(){
           users.d[0].ADDItem(mainInventory);
         }
         else if(adminmenuchoice==2){
-
+          for (int i = 0; i <mainInventory.dept.size(); i++)
+          {
+            for(int j=0;j<mainInventory.dept[i].t.size();j++){
+             mainInventory.dept[i].t[j].displayItemForAdmin();
+            }
+          }
+          
         }
          else if(adminmenuchoice==3){
             users.d[0].requestItemQuantity(mainInventory);
@@ -327,13 +331,13 @@ int main(){
             users.d[0].RemoveItem(mainInventory);
         }
          else if(adminmenuchoice==5){
-            
-        }
-         else if(adminmenuchoice==6){
             users.d[0].modifyItem(mainInventory);
         }
-         else if(adminmenuchoice==7){
+         else if(adminmenuchoice==6){
             globalAdminLoopVariable=1;
+        }
+        else{
+            cout<<"wrong choice !!, enter again "<<endl;
         }
         
      }

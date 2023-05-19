@@ -4,6 +4,8 @@
 #include<fstream>
 #include<sstream>
 #include<random>
+#include<chrono>
+#include<ctime>
 using namespace std;
 class Item{
     int SKU;
@@ -50,6 +52,15 @@ class Item{
   int getItemsPurchasedFromVendor(){
     return itemspurchased;
   }
+  void displayItemForCustomer_cart(){
+    cout<<"----------------------------------"<<endl;
+    cout<<"NAME : "<<name<<endl;
+    cout<<"SKU : "<<SKU<<endl;
+    cout<<"sale price : "<<sale_price<<endl;
+    cout<<"In stock : "<<stock_quantity<<endl;
+    cout<<"cart quantity : "<<cart_quantity<<endl;
+    cout<<"----------------------------------"<<endl;
+  }
   void displayItemForCustomer(){
     cout<<"----------------------------------"<<endl;
     cout<<"NAME : "<<name<<endl;
@@ -57,8 +68,6 @@ class Item{
     cout<<"sale price : "<<sale_price<<endl;
     cout<<"In stock : "<<stock_quantity<<endl;
     cout<<"----------------------------------"<<endl;
-     
-    
   }
    void displayItemForAdmin(){
     cout<<"----------------------------------"<<endl;
@@ -302,9 +311,8 @@ class admin:public roles{
     cout<<"2.display stock "<<endl;
     cout<<"3.refill through vendor "<<endl;
     cout<<"4.remove an item "<<endl;
-    cout<<"5.display status of order placed"<<endl;
-    cout<<"6.modify an item"<<endl;
-    cout<<"7.exit"<<endl;
+    cout<<"5.modify an item"<<endl;
+    cout<<"6.exit"<<endl;
     cout<<"---------------END OF MENU--------------"<<endl;
  }
  void seeInventory(Inventory &p){
@@ -548,7 +556,8 @@ void PrintTotalItems(){
 void PrintItemDescription(){
     for (int i = 0; i < t.size(); i++)
     {
-        t[i].displayItemForCustomer();
+        t[i].displayItemForCustomer_cart();
+        
     }
     
 }
@@ -587,6 +596,7 @@ void PrintMenuForNon_ExistingCustomer(){
 };
 struct order{
     vector<Item> t;
+    int order_number;
     order(){
 
     }
@@ -594,14 +604,40 @@ struct order{
         vector<Item> t(p);
     }
     int getRandomNumber(int min, int max) {
-    std::random_device rd;                            // Obtain a random seed from the hardware
-    std::mt19937 eng(rd());                           // Seed the random number engine
-    std::uniform_int_distribution<int> distr(min, max); // Define the range
-
-    return distr(eng);                                 // Generate and return a random number
+    random_device rd;                                // Obtain a random seed from the hardware
+    mt19937 eng(rd());                              // Seed the random number engine
+    uniform_int_distribution<int> distr(min, max); // Define the range
+    return distr(eng);                            // Generate and return a random number
 }
-void printBill(){
+void printBill(string paymentMethod){
+    cout<<"------------------------------------------"<<endl;
+    for (int i = 0; i <t.size(); i++)
+    {
+        t[i].displayItemForCustomer();
+        cout<<endl;
+    }
+    double total=0.0;
+    for (int i = 0; i < t.size(); i++)
+        {
+            total=total+t[i].getPurchasePrice();
+        }
+        
+        cout<<"total amount paid : "<<total<<endl;
+        cout<<"payment method : "<<paymentMethod<<endl;
+        cout<<"delivery charges (5%) : "<<total*0.05<<endl;
+        cout<<"delivery status : handed over to courier, will be delivered in 48 hours"<<endl;
+        // Get the current system time
+    chrono::system_clock::time_point now = chrono::system_clock::now();
 
+    // Convert the system time to a time_t object
+    time_t currentTime = chrono::system_clock::to_time_t(now);
+
+    // Convert the time_t object to a string representation
+    string timeString = std::ctime(&currentTime);
+
+    // Print the current time
+    cout <<"time of order : " << timeString;
+    
 }
 };
 class Report{
