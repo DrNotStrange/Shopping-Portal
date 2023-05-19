@@ -1,6 +1,9 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<fstream>
+#include<sstream>
+#include<random>
 using namespace std;
 class Item{
     int SKU;
@@ -25,6 +28,9 @@ class Item{
     requestQuantity=request;
     soldQuantity=sold;
     itemspurchased=purchased; 
+  }
+  string getNameOfItem(){
+    return name;
   }
   void setrequestQuantity(int x){
     requestQuantity=x;
@@ -232,6 +238,54 @@ int getfrequency(){
 class Inventory{
     public:
 vector<department> dept;
+void loadInventory(Inventory &mainInventory,string departmentFile,string itemfile){
+    fstream departments;
+    string line;
+    departments.open(departmentFile,ios::in);
+    while(getline(departments,line))
+    {
+        stringstream ss(line);
+        getline(ss,line,',');
+        department dept(line);
+        mainInventory.dept.push_back(dept);
+    }
+    departments.close();
+    fstream items;
+    string line1;
+    items.open(itemfile,ios::in);
+    while(getline(items,line1)){
+stringstream ss1(line1);
+string sku,department_name1,name,sale_price,purchase_price,stock_quantity,cart_quantity,request_quantity,sold_quantity,itemspurchased;
+getline(ss1,sku,',');
+getline(ss1,department_name1,',');
+getline(ss1,name,',');
+getline(ss1,sale_price,',');
+getline(ss1,purchase_price,',');
+getline(ss1,stock_quantity,',');
+getline(ss1,cart_quantity,',');
+getline(ss1,request_quantity,',');
+getline(ss1,sold_quantity,',');
+getline(ss1,itemspurchased,',');
+int sku1=stoi(sku);
+double sale_price1=stoi(sale_price);
+double purchase_price1=stod(purchase_price);
+int stock_quantity1=stoi(stock_quantity);
+int cart_quantity1=stoi(cart_quantity);
+int request_quantity1=stoi(request_quantity);
+int sold_quantity1=stoi(sold_quantity);
+int itemspurchased1=stoi(itemspurchased);
+Item temp(name,sku1,sale_price1,purchase_price1,stock_quantity1,cart_quantity1,request_quantity1,sold_quantity1,itemspurchased1);
+for (int i = 0; i < mainInventory.dept.size(); i++)
+{
+    if (mainInventory.dept[i].getName()==department_name1)
+    {
+        mainInventory.dept[i].AddItem(temp);
+    }
+    
+}
+    }
+    items.close();
+ }
 };
 class admin:public roles{
  public:
@@ -240,7 +294,20 @@ class admin:public roles{
     setUserId(id);
     setPassword(paswword1);
  }
- void seeInventory(Inventory p){
+ void displayAdminMenu(){
+    cout<<"---------------------------------------"<<endl;
+    cout<<"               ADMIN MENU              "<<endl;
+    cout<<endl;
+    cout<<"\n1.add new product "<<endl;
+    cout<<"2.display stock "<<endl;
+    cout<<"3.refill through vendor "<<endl;
+    cout<<"4.remove an item "<<endl;
+    cout<<"5.display status of order placed"<<endl;
+    cout<<"6.modify an item"<<endl;
+    cout<<"7.exit"<<endl;
+    cout<<"---------------END OF MENU--------------"<<endl;
+ }
+ void seeInventory(Inventory &p){
     int choice=0;
     for (int i = 0; i <p.dept.size(); i++)
     {
@@ -255,13 +322,14 @@ class admin:public roles{
     p.dept[choice].t[i].displayItemForAdmin();
     } 
  }
+ 
  void displayAdminInfo(){
     cout<<"-------------------------------"<<endl;
     cout<<"name : "<<getName()<<endl;
     cout<<"user id : "<<getUserId()<<endl;
     cout<<"-------------------------------"<<endl;
  }
- void ADDItem(Inventory p){
+ void ADDItem(Inventory &p){
     string deptartmentName;
     string name;
     int x=0;
@@ -305,7 +373,7 @@ class admin:public roles{
     
 
  }
- void RemoveItem(Inventory p){
+ void RemoveItem(Inventory &p){
     int sku=0;
     cout<<"enter Sku of item you would like to remove : ";
     cin>>sku;
@@ -324,7 +392,7 @@ class admin:public roles{
     }
 
  }
- void requestItemQuantity(Inventory p){
+ void requestItemQuantity(Inventory &p){
     int sku,quantity;
        cout<<"enter the sku of the item which you want to request from vendor: ";
        cin>>sku;
@@ -344,7 +412,7 @@ class admin:public roles{
         }
        }
  }
- void modifyItem(Inventory p){
+ void modifyItem(Inventory &p){
      int sku=0;
      cout<<"enter sku of item you want to modify : ";
      cin>>sku;
@@ -520,11 +588,21 @@ void PrintMenuForNon_ExistingCustomer(){
 struct order{
     vector<Item> t;
     order(){
-        
+
     }
     order(vector<Item> p){
         vector<Item> t(p);
     }
+    int getRandomNumber(int min, int max) {
+    std::random_device rd;                            // Obtain a random seed from the hardware
+    std::mt19937 eng(rd());                           // Seed the random number engine
+    std::uniform_int_distribution<int> distr(min, max); // Define the range
+
+    return distr(eng);                                 // Generate and return a random number
+}
+void printBill(){
+
+}
 };
 class Report{
 vector<order> k;
@@ -532,7 +610,7 @@ public:
 Report(vector<order> p){
     vector<order> k(p);
 }
-void GeneratesalesReport(){
+void GenerateSalesReport(){
     //total amounts of items sold;
     int amountofItemSold=0;
     for (int i = 0; i <k.size(); i++)
@@ -633,5 +711,120 @@ void addAdmin(admin p){
 void addVendor(vendor p){
     k.push_back(p);
 }
+void LoadCustomerDatabase(UserDatabase &users,string customerFileName){
+fstream customersFile;
+    string line2;
+    customersFile.open(customerFileName,ios::in);
+    while(getline(customersFile,line2)){
+        stringstream ss2(line2);
+        string name,customer_id,password,email,address,frequency,phone_no;
+        getline(ss2,name,',');
+        getline(ss2,customer_id,',');
+        getline(ss2,password,',');
+        getline(ss2,email,',');
+        getline(ss2,address,',');
+        getline(ss2,frequency,',');
+        getline(ss2,phone_no,',');
+        double phone_no1=stoi(phone_no);
+        int customer_id1=stoi(customer_id);
+        int frequency1=stoi(frequency);
+        customer temp(name,customer_id1,password,email,address,phone_no1,frequency1);
+        users.addcustomer(temp);
+    }
+    customersFile.close();
+}
+void LoadAdminDatabase(UserDatabase &users,string adminfilename){
+    fstream AdminFile;
+    string line3;
+    AdminFile.open(adminfilename,ios::in);
+    while(getline(AdminFile,line3)){
+        stringstream ss3(line3);
+        string name,id,password;
 
+            getline(ss3,name,',');
+            getline(ss3,id,',');
+            getline(ss3,password,',');
+            int id1=stoi(id);
+            admin temp(name,id1,password);
+            users.addAdmin(temp);
+    }
+    AdminFile.close();
+ }
+ void LoadVendorDatabase(UserDatabase &users,string vendorfilename){
+    fstream VendorFile;
+    string line4;
+    VendorFile.open(vendorfilename,ios::in);
+    while(getline(VendorFile,line4)){
+        stringstream ss4(line4);
+        string name,id,password;
+
+            getline(ss4,name,',');
+            getline(ss4,id,',');
+            getline(ss4,password,',');
+            int id1=stoi(id);
+            vendor temp(name,id1,password);
+            users.addVendor(temp);
+    }
+    VendorFile.close();
+ }
+};
+
+class VisaCard{
+    double card_number;
+    double cvv;
+    string expiry_date;
+public:
+VisaCard(double c,double cv,string expiry){
+    card_number=c;
+    cvv=cv;
+    expiry_date=expiry;
+}
+string getExpiryDate(){
+return expiry_date;
+}
+double getCardNumber(){
+    return card_number;
+}
+double getCvv(){
+    return cvv;
+}
+bool getPayment(vector<VisaCard> visa){
+
+     double card_number1;
+    double cvv1;
+    string expiry_date1;
+    cout<<"enter card number : ";
+    cin>>card_number1;
+    cout<<"enter pin code also known as cvv : ";
+    cin>>cvv1;
+    cout<<"enter expiry date in this format (month-day-year) : ";
+    cin>>expiry_date1;
+    for (int i = 0; i < visa.size(); i++)
+    {
+        if (card_number1==visa[i].getCardNumber() && cvv1==visa[i].getCvv() && expiry_date1==visa[i].getExpiryDate())
+        {
+            return 1;
+        }
+        
+    }
+    return 0;
+}
+void loadPaymentDatabase(vector<VisaCard> &visa,string filename){
+     fstream visaFile;
+     string line;
+     visaFile.open(filename,ios::in);
+     while(getline(visaFile,line)){
+        stringstream ss(line);
+        string card_number1,cvv1;
+        string expiry_date1;
+        getline(ss,card_number1,',');
+        getline(ss,cvv1,',');
+        getline(ss,expiry_date1,',');
+        double card_number2=stod(card_number1);
+        double cvv2=stod(cvv1);
+        VisaCard temp(card_number2,cvv2,expiry_date1);
+        visa.push_back(temp);
+     }
+     visaFile.close();
+}
 };
