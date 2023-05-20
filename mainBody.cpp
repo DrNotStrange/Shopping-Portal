@@ -307,8 +307,7 @@ int main(){
         else{
             cout<<"wrong login information ! "<<endl;
         }
-    }
-     
+    }   
     else{
         cout<<"wrong choice! please enter again"<<endl;
     }
