@@ -31,6 +31,7 @@ class Item{
     soldQuantity=sold;
     itemspurchased=purchased; 
   }
+  
   string getNameOfItem(){
     return name;
   }
@@ -254,7 +255,6 @@ void loadInventory(Inventory &mainInventory,string departmentFile,string itemfil
     while(getline(departments,line))
     {
         stringstream ss(line);
-        getline(ss,line,',');
         department dept(line);
         mainInventory.dept.push_back(dept);
     }
@@ -337,7 +337,9 @@ class admin:public roles{
     cout<<"user id : "<<getUserId()<<endl;
     cout<<"-------------------------------"<<endl;
  }
- void ADDItem(Inventory &p){
+ void ADDItem(Inventory &p,string itemFileName){
+    fstream itemfile;
+    itemfile.open(itemFileName,ios::app);
     string deptartmentName;
     string name;
     int x=0;
@@ -378,10 +380,15 @@ class admin:public roles{
         
         }
     }
+    itemfile<<x<<","<<deptartmentName<<","<<name<<","<<sale<<","<<purchase<<","<<stock<<","<<0<<","<<requested<<","<<soldquantity<<","<<itempurchased<<endl;
+    itemfile.close();
     
 
  }
- void RemoveItem(Inventory &p){
+ void RemoveItem(Inventory &p,string itemfilename){
+    fstream itemfile;
+    itemfile.open(itemfilename,ios::app);
+
     int sku=0;
     cout<<"enter Sku of item you would like to remove : ";
     cin>>sku;
@@ -412,10 +419,12 @@ class admin:public roles{
         {
             if(p.dept[i].t[j].getSKU()==sku){
                 p.dept[i].t[j].setrequestQuantity(quantity);
+                cout<<"item requested successfully ! "<<endl;
                 break;
             }
             else{
                 cout<<"error, item not found "<<endl;
+                break;
             }
         }
        }
@@ -466,7 +475,16 @@ vendor(string name1,int id,string paswword1){
     setUserId(id);
     setPassword(paswword1);
  }
-void seeInventory( Inventory p){
+ void vendormenu(){
+    cout<<"Vendor View"<<endl;
+    cout<<"----------------------"<<endl;
+    cout<<"choice 1 : check requested stock "<<endl;
+    cout<<"choice 2 : update requested stock"<<endl;
+    cout<<"choice 3 : exit"<<endl;
+    cout<<"----------------------"<<endl;
+
+ }
+void seeInventory(Inventory p){
     for (int i = 0; i <p.dept.size(); i++)
     {
         for (int j = 0;  j<p.dept[i].t.size(); j++)
@@ -486,7 +504,7 @@ void displayvendorInfo(){
     cout<<"user id : "<<getUserId()<<endl;
     cout<<"-------------------------------"<<endl;
  }
-void updateInventory(Inventory p){
+void updateInventory(Inventory &p){
      int sku=0,quantity=0;
      cout<<"enter the sku of item you want to update stock of : ";
      cin>>sku;
@@ -597,11 +615,17 @@ void PrintMenuForNon_ExistingCustomer(){
 struct order{
     vector<Item> t;
     int order_number;
+    string time0forder;
     order(){
 
     }
-    order(vector<Item> p){
-        vector<Item> t(p);
+    order(vector<Item> &p){
+
+        for (int i = 0; i <p.size(); i++)
+        {
+            t.push_back(p[i]);
+        }
+        
     }
     int getRandomNumber(int min, int max) {
     random_device rd;                                // Obtain a random seed from the hardware
@@ -610,19 +634,26 @@ struct order{
     return distr(eng);                            // Generate and return a random number
 }
 void printBill(string paymentMethod){
-    cout<<"------------------------------------------"<<endl;
+    order_number=getRandomNumber(1,1000);
+    cout<<"---------------------------------------------------"<<endl;
+    cout<<"order Number : "<<order_number<<endl;
+    cout<<"---------------------------------------------------"<<endl;
     for (int i = 0; i <t.size(); i++)
     {
         t[i].displayItemForCustomer();
         cout<<endl;
     }
+    cout<<endl<<endl;
+    
     double total=0.0;
     for (int i = 0; i < t.size(); i++)
         {
-            total=total+t[i].getPurchasePrice();
+            total=total+t[i].getSalePrice();
         }
-        
+        cout<<"------------------------------"<<endl;
         cout<<"total amount paid : "<<total<<endl;
+        cout<<"------------------------------"<<endl;
+        cout<<endl;
         cout<<"payment method : "<<paymentMethod<<endl;
         cout<<"delivery charges (5%) : "<<total*0.05<<endl;
         cout<<"delivery status : handed over to courier, will be delivered in 48 hours"<<endl;
@@ -634,10 +665,55 @@ void printBill(string paymentMethod){
 
     // Convert the time_t object to a string representation
     string timeString = std::ctime(&currentTime);
+    time0forder=timeString;
 
     // Print the current time
-    cout <<"time of order : " << timeString;
+    cout <<"time of order : " << time0forder;
     
+}
+void appendNewOrder(vector<order> &Allorders,string orderFilename){
+fstream orderFile;
+orderFile.open(orderFilename,ios::app);
+orderFile<<Allorders[Allorders.size()-1].order_number<<","<<Allorders[Allorders.size()-1].t.size()<<",";
+for(int i=0;i<Allorders[Allorders.size()-1].t.size();i++){
+orderFile<<Allorders[Allorders.size()-1].t[i].getSKU()<<",";
+}
+orderFile<<Allorders[Allorders.size()-1].time0forder<<endl;
+orderFile.close();
+
+}
+void LoadOrders(vector<order> &Allorders,string orderfilename,Inventory &inv){
+    fstream orderfile;
+    string line;
+    orderfile.open(orderfilename,ios::app);
+    while(getline(orderfile,line)){
+       stringstream ss(line);
+       string orderNumber,numberOFitems,timeofOrder,sku;
+       getline(ss,orderNumber,',');
+       getline(ss,numberOFitems,',');
+       int numberofItem1=stoi(numberOFitems);
+       vector<Item> items;
+       for (int i = 0; i <numberofItem1; i++)
+       {
+        int temp;
+        getline(ss,sku,',');
+        temp=stoi(sku);
+        for (int g = 0; g <inv.dept.size(); g++)
+        {
+            for (int f = 0; f <inv.dept[g].t.size(); f++)
+            {
+                if (inv.dept[g].t[f].getSKU()==temp)
+                {
+                   Item tempitem(inv.dept[g].t[f]);
+                   Allorders[Allorders.size()-1].t.push_back(tempitem);
+                }
+                
+            }
+            
+        }
+       }
+       
+    }
 }
 };
 class Report{
@@ -810,6 +886,9 @@ class VisaCard{
     double cvv;
     string expiry_date;
 public:
+VisaCard(){
+
+}
 VisaCard(double c,double cv,string expiry){
     card_number=c;
     cvv=cv;
@@ -863,4 +942,28 @@ void loadPaymentDatabase(vector<VisaCard> &visa,string filename){
      }
      visaFile.close();
 }
+};
+class cash{
+    double amount;
+    public:
+    void setamount(double x){
+amount=x;
+    }
+    double getamount(){
+        return amount;
+    }
+    void loadCashRegister(cash &c,string cashfilename){
+        fstream cashfile;
+        string line;
+        cashfile.open(cashfilename,ios::in);
+        while(getline(cashfile,line)){
+            stringstream ss(line);
+            string amount1;
+            getline(ss,amount1,',');
+            double amount2=stod(amount1);
+            c.setamount(amount2);
+        }
+        cashfile.close();
+    }
+
 };
